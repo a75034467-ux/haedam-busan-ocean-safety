@@ -1,0 +1,1 @@
+export function calculateJellyfishTrend(current, previous) { if (previous === 0) return {text: current > 0 ? '신규 출현' : '변화 없음', rate:null}; const rate=Math.round(((current-previous)/previous)*100); return {text:rate>0?'증가':rate<0?'감소':'변화 없음',rate}; }
