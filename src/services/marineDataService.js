@@ -1,12 +1,20 @@
-// API 교체 지점: 실제 API 응답을 이 구조로 정규화해 반환하면 UI를 그대로 사용할 수 있습니다.
-const at='2026. 08. 05. 10:00';
-export const getMarineData=()=>[
- {id:'haeundae',name:'해운대해수욕장',shortName:'해운대',area:'해운대구 우동',center:[35.15870,129.16039],temperature:24.9,wave:.6,rip:18,jelly:380,jellyPrevious:310,discoverRate:22,species:'보름달물해파리',jellyAlert:'예비주의보',weekly:[38,48,45,62],updatedAt:at,oceanRiskZones:[{id:'haeundae-rip',center:[35.15785,129.16345],radiusMeters:105,riskLevel:'safe'}],statusPoints:{jelly:[35.1574,129.1649],wave:[35.1591,129.1641],surf:[35.1601,129.1636]}},
- {id:'gwangalli',name:'광안리해수욕장',shortName:'광안리',area:'수영구 광안동',center:[35.15317,129.11862],temperature:24.9,wave:.6,rip:47,jelly:240,jellyPrevious:270,discoverRate:17,species:'보름달물해파리',jellyAlert:'없음',weekly:[42,37,35,31],updatedAt:at,oceanRiskZones:[{id:'gwangalli-rip',center:[35.1516,129.1183],radiusMeters:95,riskLevel:'caution'}],statusPoints:{jelly:[35.1507,129.119],wave:[35.151,129.1168],surf:[35.1522,129.1159]}},
- {id:'songjeong',name:'송정해수욕장',shortName:'송정',area:'해운대구 송정동',center:[35.17965,129.19953],temperature:24.9,wave:.6,rip:35,jelly:320,jellyPrevious:260,discoverRate:21,species:'보름달물해파리',jellyAlert:'예비주의보',weekly:[28,36,45,57],updatedAt:at,oceanRiskZones:[{id:'songjeong-rip',center:[35.18025,129.20175],radiusMeters:90,riskLevel:'caution'}],statusPoints:{jelly:[35.181,129.2025],wave:[35.1794,129.2023],surf:[35.1786,129.2016]}},
- {id:'songdo',name:'송도해수욕장',shortName:'송도',area:'서구 암남동',center:[35.07639,129.02332],temperature:24.9,wave:.6,rip:61,jelly:1200,jellyPrevious:800,discoverRate:54,species:'보름달물해파리',jellyAlert:'주의보',weekly:[35,52,67,83],updatedAt:at,oceanRiskZones:[{id:'songdo-rip',center:[35.07535,129.02445],radiusMeters:100,riskLevel:'alert'}],statusPoints:{jelly:[35.0747,129.0253],wave:[35.0757,129.0255],surf:[35.0765,129.025]}},
- {id:'dadaepo',name:'다대포해수욕장',shortName:'다대포',area:'사하구 다대동',center:[35.04604,128.96788],temperature:23.8,wave:.4,rip:28,jelly:160,jellyPrevious:210,discoverRate:12,species:'보름달물해파리',jellyAlert:'없음',weekly:[46,39,32,27],updatedAt:at,oceanRiskZones:[{id:'dadaepo-rip',center:[35.0445,128.9665],radiusMeters:120,riskLevel:'safe'}],statusPoints:{jelly:[35.0438,128.9655],wave:[35.045,128.9648],surf:[35.046,128.9651]}},
- {id:'ilgwang',name:'일광해수욕장',shortName:'일광',area:'기장군 일광읍',center:[35.26460,129.23380],temperature:25,wave:.6,rip:73,jelly:640,jellyPrevious:430,discoverRate:31,species:'노무라입깃해파리',jellyAlert:'예비주의보',weekly:[32,44,58,69],updatedAt:at,oceanRiskZones:[{id:'ilgwang-rip',center:[35.26325,129.23515],radiusMeters:100,riskLevel:'alert'}],statusPoints:{jelly:[35.2627,129.236],wave:[35.2633,129.2365],surf:[35.2645,129.236]}},
- {id:'imrang',name:'임랑해수욕장',shortName:'임랑',area:'기장군 장안읍',center:[35.32180,129.26390],temperature:25,wave:.6,rip:52,jelly:0,jellyPrevious:0,discoverRate:0,species:'보름달물해파리',jellyAlert:'없음',weekly:[8,6,5,4],updatedAt:at,oceanRiskZones:[{id:'imrang-rip',center:[35.32065,129.26505],radiusMeters:90,riskLevel:'caution'}],statusPoints:{jelly:[35.3202,129.2658],wave:[35.321,129.2661],surf:[35.322,129.2657]}}
+// API 교체 지점: 실제 관측 API 연결 시 이 모듈의 getMarineData만 교체합니다.
+const updatedAt = '2026. 08. 05. 10:00';
+
+const raw = [
+  ['haeundae','해운대해수욕장','해운대구 우동','해운대',[35.15870,129.16039],[35.15788,129.16345],44,24.9,.6,18,380,310,'예비주의보','보름달물해파리','남동풍 2.1m/s','해안 수직 입사','정상'],
+  ['gwangalli','광안리해수욕장','수영구 광안동','광안리',[35.15317,129.11862],[35.15160,129.11850],38,24.9,.6,46,240,270,'관심','보름달물해파리','남서풍 3.3m/s','만 안쪽 분산','정상'],
+  ['songjeong','송정해수욕장','해운대구 송정동','송정',[35.17965,129.19953],[35.18025,129.20162],42,24.9,.6,35,320,260,'예비주의보','보름달물해파리','동풍 3.8m/s','해안 수직 입사','정상'],
+  ['songdo','송도해수욕장','서구 암남동','송도',[35.07639,129.02332],[35.07532,129.02420],34,24.9,.6,64,1200,800,'주의보','보름달물해파리','남동풍 5.7m/s','만 안쪽 분산','현장 주의'],
+  ['dadaepo','다대포해수욕장','사하구 다대동','다대포',[35.04604,128.96788],[35.04458,128.96660],36,23.8,.4,27,160,210,'관심','보름달물해파리','남풍 2.7m/s','완만한 진입','정상'],
+  ['ilgwang','일광해수욕장','기장군 일광읍','일광',[35.26460,129.23380],[35.26318,129.23525],38,25,.6,73,640,430,'예비주의보','노무라입깃해파리','동풍 6.5m/s','사선 진입','현장 주의'],
+  ['imrang','임랑해수욕장','기장군 장안읍','임랑',[35.32180,129.26390],[35.32062,129.26512],36,25,.6,52,0,0,'관심','보름달물해파리','북동풍 4.2m/s','해안 수직 입사','정상']
 ];
-export const refreshMarineData=prev=>(prev?.length?prev:getMarineData()).map((x,i)=>({...x,updatedAt:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}),wave:Number(Math.max(.1,x.wave+((i%3)-1)*.02).toFixed(1))}));
+
+export const getMarineData = () => raw.map(([id,name,area,shortName,center,riskCenter,radius,temperature,wave,rip,jelly,jellyPrevious,jellyAlert,species,wind,waveDirection,control]) => ({
+  id,name,area,shortName,center,riskCenter,radius,temperature,wave,rip,jelly,jellyPrevious,jellyAlert,species,wind,waveDirection,control,updatedAt,
+  weekly: jelly ? [Math.max(20, Math.round(jelly*.35)),Math.max(20, Math.round(jelly*.52)),Math.max(20, Math.round(jelly*.72)),jelly] : [5,8,6,4],
+  terrain: id==='gwangalli'||id==='songdo' ? '육지 안쪽으로 들어간 만 형태입니다. 파도와 흐름은 지형에 따라 분산될 수 있으나, 현재 이안류지수와 현장 통제를 우선 확인하세요.' : id==='dadaepo' ? '완만하고 평탄한 경사면이 이어지는 지형입니다. 급격한 수심 변화 가능성이 상대적으로 낮을 수 있지만, 지형만으로 안전을 보장하지 않습니다.' : '해안선과 모래사장 방향에 따라 파도와 흐름이 달라질 수 있습니다. 입수 전 현재 상태와 현장 안내를 확인하세요.'
+}));
+
+export const refreshMarineData = (data) => data.map((b,i) => ({...b, updatedAt: new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), wave: Number(Math.max(.2,b.wave+(i%3-1)*.02).toFixed(1))}));
